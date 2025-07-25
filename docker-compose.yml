@@ -2,15 +2,21 @@ version: '3.8'
 
 services:
   qdrant:
-    # This tells Docker to use the official, pre-built image. No compiling!
     image: qdrant/qdrant:latest
-
-    # This section is the CRITICAL part that prevents server crashes.
+    
+    # ADD THIS ENVIRONMENT SECTION
+    environment:
+      # The double underscores are important! They map to config settings.
+      - QDRANT__SERVICE__API_KEY=${QDRANT_SECRET_API_KEY}
+    
+    volumes:
+      - ./qdrant_storage:/qdrant/storage
+    
     deploy:
       resources:
         limits:
-          cpus: '1.0'   # Limit the container to a maximum of 1 CPU core.
-          memory: 2G    # Limit the container to a maximum of 2GB of RAM.
+          cpus: '1.0'
+          memory: 2G
         reservations:
-          cpus: '0.5'   # Ensure it has at least 0.5 CPU core available to start.
-          memory: 1G    # Ensure it has at least 1GB of RAM available to start.
+          cpus: '0.5'
+          memory: 1G
